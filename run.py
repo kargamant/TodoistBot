@@ -1,4 +1,4 @@
-from telegram import dp, bot
+from src.telegram import dp, bot
 from asyncio import run
 
 if __name__ == '__main__':
