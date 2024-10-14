@@ -18,7 +18,7 @@ async def start_message(message: Message) -> None:
             f"To let me analyze your Todoist bin, you have to authorize via todoist.\n\n",
             f"To authorize go via this ",
              oauth_link,
-            f" and send token that you will see on our website\n\n"
+            f" and send token that you will see on our website \n\n"
             f"We will not use it for illegal purposes. Only for helping you to increase you productivity."] #mb add ai response
     content = Text(*reply)
 
