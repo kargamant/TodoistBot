@@ -1,3 +1,2 @@
-import todoist_api_python.api as td
-
-td
+TOKEN_LENGTH = 40
+GREETINGS_TASK_TEXT = 'Hi from todoist ai helper'

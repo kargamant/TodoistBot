@@ -9,9 +9,9 @@ class Base(DeclarativeBase):
 class User(Base):
     __tablename__ = 'user_table'
 
-    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    #id: Mapped[int] = mapped_column(primary_key=True)
     tg_id: Mapped[str] = mapped_column(primary_key=True)
     access_token: Mapped[Optional[str]] = mapped_column(primary_key=True)
 
     def __repr__(self):
-        return f'User(id={self.id}, tg_id={self.tg_id}, access_token={self.access_token}'
+        return f'User(tg_id={self.tg_id}, access_token={self.access_token}'

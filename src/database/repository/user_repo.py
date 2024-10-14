@@ -25,4 +25,9 @@ class UserRepository:
         self.session.add(user)
         self.session.commit()
         return user
-    
+
+    def update_access_token(self, tg_id: str, access_token: str) -> User | None:
+        user = self.get_user_by_tg_id(tg_id)
+        user.access_token = access_token
+        self.session.commit()
+        return user
