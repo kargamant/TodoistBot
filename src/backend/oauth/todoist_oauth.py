@@ -16,5 +16,5 @@ class OAuthController(Controller):
             'code' : code,
             'redirect_uri' : REDIRECT_URI
         })
-        print(response.json())
-        return {"message": "OAuth endpoint"}
+        # print(response.json())
+        return response.json() # just for now
