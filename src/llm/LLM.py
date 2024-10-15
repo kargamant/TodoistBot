@@ -1,5 +1,5 @@
 from llama_cpp import Llama, LLAMA_SPLIT_MODE_NONE
-from llm_config import MODEL_PATH, CATEGORIZE_INBOX_PROMPT, EXTRACT_CATEGORIES_PROMPT
+from .llm_config import MODEL_PATH, CATEGORIZE_INBOX_PROMPT, EXTRACT_CATEGORIES_PROMPT
 import os
 
 class LLM:
@@ -49,13 +49,14 @@ class LLM:
         self.llm.reset()
         return response['choices'][0]['message']['content']
 
-llm = LLM()
-response = llm.extract_inbox_categories(llm.sort_inbox(['open new bank account at Tinkoff bank',
-                                                        'buy milk',
-                                                        'find a job',
-                                                        'start going to the gym'],
-                                                       ['personal', 'career', 'finances', 'daily']))
-print(response)
+llm_service = LLM()
+
+# response = llm.extract_inbox_categories(llm.sort_inbox(['open new bank account at Tinkoff bank',
+#                                                         'buy milk',
+#                                                         'find a job',
+#                                                         'start going to the gym'],
+#                                                        ['personal', 'career', 'finances', 'daily']))
+# print(response)
 # Example json response
 # {
 #   "tasks": [

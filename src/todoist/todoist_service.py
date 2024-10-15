@@ -19,6 +19,7 @@ class TodoistService:
         self.api.add_task(content=GREETINGS_TASK_TEXT)
 
     def get_inbox(self):
-        return self.api.get_tasks(project_id=self.api.get_project().id)
+        return [task.content for task in self.api.get_tasks(project_id=self.api.get_projects()[0].id)]
 
-
+    def get_categories(self):
+        return [project.name for project in self.api.get_projects()[1::]]

@@ -1,12 +1,15 @@
+import os.path
+
 from aiogram import Bot, Dispatcher, filters
 from aiogram import F
 from aiogram.types import Message
 from aiogram.utils.formatting import TextLink, Text
-from .tg_configs import TOKEN
+from .tg_configs import TOKEN, NOT_AUTH_ERROR_MESSAGE
 from src.todoist import TOKEN_LENGTH
 from src.backend.oauth import URL
 from src.todoist import verify_token, TodoistService
 from src.database.repository import UserRepository
+from src.llm import llm_service
 
 
 bot = Bot(token=TOKEN)
@@ -65,7 +68,7 @@ async def check_token(message: Message) -> None:
     user = repo.get_user_by_tg_id(message.from_user.username)
 
     if user is None:
-        await message.answer("Oops. Seems you haven't registered yet. Call /start command for more details.")
+        await message.answer(NOT_AUTH_ERROR_MESSAGE)
 
     token = user.access_token
     if await verify_token(token):
@@ -76,3 +79,28 @@ async def check_token(message: Message) -> None:
                                     "and send me new token."
                                     ).as_kwargs()
                              )
+
+
+@dp.message(filters.command.Command('inbox_analyze'))
+async def analyze_inbox(message: Message):
+    repo = UserRepository()
+    user = repo.get_user_by_tg_id(message.from_user.username)
+    if user is None:
+        await message.answer(NOT_AUTH_ERROR_MESSAGE)
+
+    todoist = TodoistService(user.access_token)
+
+    tasks = todoist.get_inbox()
+    categories = todoist.get_categories()
+
+    response = ''
+    for i in range(0, len(tasks), 10):
+        response += llm_service.extract_inbox_categories(llm_service.sort_inbox(tasks[i:i+10:], categories))
+        response += '\n'
+    await message.answer(response)
+
+
+@dp.message(filters.command.Command('help'))
+async def help(message: Message):
+    with open(os.path.join(os.path.dirname(__file__), 'help.txt'), 'r') as file:
+        await message.answer(file.read())

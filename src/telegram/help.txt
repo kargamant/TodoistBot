@@ -1,0 +1,4 @@
+/start - start bot
+/help - list of commands
+/check_token - check your access token
+/inbox_analyze - sort inbox
