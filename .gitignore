@@ -1,3 +1,4 @@
 /src/telegram/token.txt
 /src/backend/oauth/client_id.txt
 /src/backend/oauth/client_secret.txt
+/src/llm/Hermes-2-Pro-Mistral-7B.Q3_K_L.gguf
