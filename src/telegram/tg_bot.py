@@ -31,13 +31,19 @@ async def start_message(message: Message) -> None:
 
 @dp.message(F.text.len() == TOKEN_LENGTH)
 async def get_token(message: Message) -> None:
-    if await verify_token(message.text) is False:
+    token = message.text
+    username = message.from_user.username
+
+    if await verify_token(token) is False:
         await message.answer('Sorry. Your token is incorrect or expired. Try again.')
     else:
         repo = UserRepository()
-        if repo.get_user_by_tg_id(message.from_user.username) is None:
-            repo.register_user(message.from_user.username, message.text)
-            print(repo.get_user_by_tg_id(message.from_user.username))
+
+        if repo.get_user_by_tg_id(username) is None:
+            repo.register_user(username, token)
+            print(repo.get_user_by_tg_id(username))
+            todoist = TodoistService(token)
+            todoist.drop_greetings()
 
             reply = f"Congratilations! You are now authorized via todoist.\n\n" \
                     f"To make sure oauth was successful check your todoist inbox, I left a greeting task for you.\n\n" \
@@ -46,8 +52,27 @@ async def get_token(message: Message) -> None:
 
             await message.answer(reply)
         else:
-            repo.update_access_token(message.from_user.username, message.text)
+            repo.update_access_token(username, token)
 
-            reply = f"Your access token was successfully updated dear @{message.from_user.username}."
+            reply = f"Your access token was successfully updated dear @{username}."
 
             await message.answer(reply)
+
+
+@dp.message(filters.command.Command('check_token'))
+async def check_token(message: Message) -> None:
+    repo = UserRepository()
+    user = repo.get_user_by_tg_id(message.from_user.username)
+
+    if user is None:
+        await message.answer("Oops. Seems you haven't registered yet. Call /start command for more details.")
+
+    token = user.access_token
+    if await verify_token(token):
+        await message.answer("Your token is still up to date. You don't need to authorize again.")
+    else:
+        await message.answer(**Text("Your token has expired! But don't worry. Just proceed to ",
+                                    TextLink('oauth', url=URL),
+                                    "and send me new token."
+                                    ).as_kwargs()
+                             )
