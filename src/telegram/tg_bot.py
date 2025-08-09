@@ -81,6 +81,25 @@ async def check_token(message: Message) -> None:
                              )
 
 
+@dp.message(filters.command.Command('get_today_tasks'))
+async def get_today_tasks(message: Message):
+    repo = UserRepository()
+    user = repo.get_user_by_tg_id(message.from_user.username)
+    if user is None:
+        await message.answer(NOT_AUTH_ERROR_MESSAGE)
+
+    todoist = TodoistService(user.access_token)
+
+    tasks = todoist.get_today()
+
+    response_str = ''
+    for task in tasks:
+        response_str += f'>\ntitle: {task.content}\n'
+        response_str += f'description: {task.description}\n\n'
+
+    await message.answer(response_str)
+
+
 @dp.message(filters.command.Command('inbox_analyze'))
 async def analyze_inbox(message: Message):
     repo = UserRepository()

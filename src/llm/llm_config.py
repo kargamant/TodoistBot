@@ -1,4 +1,4 @@
-MODEL_PATH = 'Hermes-2-Pro-Mistral-7B.Q3_K_L.gguf'
+MODEL_PATH = 'qwen2-0_5b-instruct-q5_k_m.gguf'
 
 # prompts
 CATEGORIZE_INBOX_PROMPT = 'You are great at categorizing tasks by categories. ' \

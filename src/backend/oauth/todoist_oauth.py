@@ -9,12 +9,12 @@ class OAuthController(Controller):
         return {"message": "Hello from TodoistAiHelper."}
 
     @get("/oauth")
-    def oauth(self, code):
+    def oauth(self, code, state):
         response = requests.post("https://todoist.com/oauth/access_token", params={
             'client_id' : CLIENT_ID,
             'client_secret' : CLIENT_SECRET,
             'code' : code,
             'redirect_uri' : REDIRECT_URI
         })
-        # print(response.json())
+        print(response.json())
         return response.json() # just for now

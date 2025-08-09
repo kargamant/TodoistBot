@@ -18,6 +18,10 @@ class TodoistService:
     def drop_greetings(self):
         self.api.add_task(content=GREETINGS_TASK_TEXT)
 
+    def get_today(self):
+        t_list = [t for t in self.api.filter_tasks(query='today', lang='ru')]
+        return t_list[0]
+
     def get_inbox(self):
         return [task.content for task in self.api.get_tasks(project_id=self.api.get_projects()[0].id)]
 
